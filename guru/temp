@@ -1,0 +1,64 @@
+<form class="user" method="post" action="penilaian.php?kelas=<?= $kelas ?>">
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <select class="form-control" id="mata_pelajaran" name="mata_pelajaran">
+                <option value="" selected disabled>Pilih Mata Pelajaran</option>
+                <?php
+                // Mengambil data mata pelajaran dari database
+                $query_mapel = "SELECT * FROM mata_pelajaran";
+                $result_mapel = mysqli_query($conn, $query_mapel);
+
+                // Mengecek apakah ada baris hasil
+                if (mysqli_num_rows($result_mapel) > 0) {
+                    // Menggunakan loop untuk mengambil semua baris hasil
+                    while ($row_mapel = mysqli_fetch_assoc($result_mapel)) {
+                        // Mengambil nilai dari setiap kolom
+                        $mapel_id = $row_mapel['id'];
+                        $mapel_nama = $row_mapel['mapel'];
+
+                        // Menambahkan opsi ke dalam dropdown
+                        echo "<option value='$mapel_id'>$mapel_nama</option>";
+                    }
+                } else {
+                    // Jika tidak ada data mata pelajaran
+                    echo "<option value='' disabled>Tidak ada data mata pelajaran</option>";
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <select class="form-control" id="mata_pelajaran" name="mata_pelajaran">
+                <option value="" selected disabled>Pilih Materi Pelajaran</option>
+                <?php
+                // Mengambil data mata pelajaran dari database
+                $query_materi = "SELECT * FROM materi";
+                $result_materi = mysqli_query($conn, $query_materi);
+
+                // Mengecek apakah ada baris hasil
+                if (mysqli_num_rows($result_materi) > 0) {
+                    // Menggunakan loop untuk mengambil semua baris hasil
+                    while ($row_materi = mysqli_fetch_assoc($result_materi)) {
+                        // Mengambil nilai dari setiap kolom
+                        $materi_id = $row_materi['id'];
+                        $fk_mapel_id = $row_materi['mapel_id'];
+                        $materi_nama = $row_materi['materi'];
+
+                        // Menambahkan opsi ke dalam dropdown
+                        echo "<option value='$materi_id'>$materi_nama</option>";
+                    }
+                } else {
+                    // Jika tidak ada data mata pelajaran
+                    echo "<option value='' disabled>Tidak ada data mata pelajaran</option>";
+                }
+                ?>
+            </select>
+        </div>
+
+        <div class="col-sm-2">
+            <button type="submit" class="btn btn-primary">Pilih</button>
+        </div>
+    </div>
+</form>

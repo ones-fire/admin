@@ -1,0 +1,116 @@
+<!-- Card Body -->
+<div class="card-body">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">No</th>
+                <th scope="col">NIP</th>
+                <th scope="col">Nama</th>
+                <th scope="col">Jenis Kelamin</th>
+                <th scope="col">Tanggal lahir</th>
+                <th scope="col">Alamat</th>
+                <th scope="col">Jabatan</th>
+                <th scope="col">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+        // Memeriksa apakah query berhasil dijalankan
+        if ($result) {
+            // Memeriksa apakah ada data yang ditemukan
+            if (mysqli_num_rows($result) > 0) {
+
+                // Inisialisasi counter
+                $counter = 1;
+
+                // Loop melalui setiap baris data
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<tr>";
+                    echo "<td>" . $counter . "</td>";
+                    echo "<td>" . $row['nip'] . "</td>";
+                    echo "<td>" . $row['nama'] . "</td>";
+                    echo "<td>" . $row['jenis_kelamin'] . "</td>";
+                    echo "<td>" . $row['tanggal_lahir'] . "</td>";
+                    echo "<td>" . $row['alamat'] . "</td>";
+                    echo "<td>" . $row['jabatan'] . "</td>";
+                    echo '<td>
+                        <button onclick="editData(' . $row['id'] . ')" class="btn btn-success btn-icon-split btn-sm">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-pen"></i>
+                            </span>
+                            <span class="text">Edit</span>
+                        </button>
+                        <button onclick="hapusData_ind(' . $row['id'] . ', \'' . $row['nama'] . '\')" class="btn btn-danger btn-icon-split btn-sm">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                            <span class="text">Hapus</span>
+                        </button>
+                    </td>';
+                    echo "</tr>";
+
+                    // Increment counter
+                    $counter++;
+
+                    ?>
+                                            <!-- Modal Hapus -->
+                        <div class="modal fade" id="hapusIndModal" tabindex="-1" role="dialog" aria-labelledby="hapusIndModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="hapusIndModalLabel">Konfirmasi Hapus</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Apakah Anda yakin ingin menghapus data <span id="hapusNama"></span>?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">
+                                            Batal
+                                        </button>
+                                        <a id="hapusData_ind" class="btn btn-danger" href="#">Hapus</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <script>
+                            function editData(id) {
+                                // Mengarahkan pengguna ke halaman hapus.php dengan meneruskan parameter ID melalui URL
+                                window.location.href = '../input/edit_user.php?id=' + id + '&tabel=guru';
+                            }
+
+                            function hapusData_ind(id, nama) {
+                                // Menampilkan nama pada elemen span dengan id "hapusNama"
+                                document.getElementById("hapusNama").textContent = nama;
+
+                                // Mengubah href pada elemen <a> dengan id "hapusData_ind"
+                                document.getElementById("hapusData_ind").href = '../input/hapus_user.php?id=' + id + '&tabel=guru&tipe=individual';
+
+                                // Menampilkan modal hapusIndModal
+                                $('#hapusIndModal').modal('show');
+                            }
+                        </script>
+                    <?php
+
+                }
+            } else {
+                echo '<div class="card border-left-danger shadow h-100 py-2">';
+                echo '    <div class="card-body">';
+                echo '        <div class="row no-gutters align-items-center">';
+                echo '            <div class="col mr-2">';
+                echo '                <div class="text-lg font-weight-bold text-danger text-uppercase">';
+                echo '                    Data Kosong</div>';
+                echo '            </div>';
+                echo '        </div>';
+                echo '    </div>';
+                echo '</div>';
+            }
+        } else {
+            echo "Error: " . mysqli_error($conn);
+        }
+        ?>
+        </tbody>
+   .

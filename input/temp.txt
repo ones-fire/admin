@@ -1,0 +1,40 @@
+<?php
+include '../koneksi.php';
+
+$kelas = $_POST['kelas'];
+
+// Cek apakah form telah disubmit
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Mendapatkan data dari form
+    $siswaId = $_POST['siswa_id'];
+    $namaDokumen = $_POST['nama_dokumen'];
+    $fileDokumen = $_FILES['dokumen']['name'];
+    $fileDokumenTmp = $_FILES['dokumen']['tmp_name'];
+
+    // Membaca isi file
+    $dokumenData = file_get_contents($fileDokumenTmp);
+
+    // Escape karakter khusus dalam data dokumen
+    $escapedDokumenData = mysqli_real_escape_string($conn, $dokumenData);
+
+    // Insert data ke tabel dokumen
+    $query = "INSERT INTO dokumen (siswa_id, nama_dokumen, dokumen) VALUES ('$siswaId', '$namaDokumen', '$escapedDokumenData')";
+    $result = mysqli_query($conn, $query);
+
+    if ($result) {
+        // Redirect kembali ke halaman sebelumnya jika sukses
+        header("Location: ../admin/dokumen.php?kelas=" . $kelas . "&status=success");
+        exit();
+    } else {
+        // Tampilkan pesan error jika terjadi kesalahan
+        echo "Error: " . mysqli_error($conn);
+        exit();
+    }
+} else {
+    // Jika form tidak disubmit, redirect kembali ke halaman sebelumnya
+    header("Location: ../admin/dokumen.php?kelas=" . $kelas . "&status=failed");
+    exit();
+}
+
+// Menutup koneksi
+mysqli_close($conn);
